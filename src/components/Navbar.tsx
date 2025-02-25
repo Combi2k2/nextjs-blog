@@ -14,7 +14,7 @@ interface NavItem {
 }
 
 const NAV_ITEMS: Array<NavItem> = [
-    {label: "Home", page: "home"},
+    {label: "Home", page: "/"},
     {label: "About", page: "about"},
     {label: "Blogs", page: "blogs"},
 ]
@@ -30,7 +30,7 @@ export default function Navbar() {
         <div className="justify-between md:items-center md:flex">
             <div>
             <div className="flex items-center justify-between py-3 md:py-5 md:block">
-                <Link href="home">
+                <Link href="/">
                     <div className="container flex items-center space-x-2">
                         <h2 className="text-2xl font-bold">Duc Nguyen</h2>
                     </div>
