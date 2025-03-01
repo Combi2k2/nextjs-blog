@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import BlogView from '@/components/BlogView';
 
 export default async function Page({ params }: {params: { slug: string }}) {
+    const { slug } = await Promise.resolve(params);
     const blog = await prisma.blog.findUnique({
         select: {
             title: true,
@@ -11,7 +12,7 @@ export default async function Page({ params }: {params: { slug: string }}) {
             tags: true,
             updatedAt: true
         },
-        where: {slug: String(params.slug)}
+        where: {slug: slug}
     });
     if (!blog) return notFound();
 
