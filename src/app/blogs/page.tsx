@@ -61,14 +61,14 @@ export default async function BlogPage() {
                         <div className="mb-1">{format(new Date(blog.date), 'MMMM d, yyyy')}</div>
 
                         <h2 className="text-2xl font-bold">
-                            <Link href={`/blog/${blog.slug}`} className="hover:text-cyan-600 transition">
+                            <Link href={`/blogs/${blog.slug}`} className="hover:text-cyan-600 transition">
                                 {blog.title}
                             </Link>
                         </h2>
 
                         <div className="flex flex-wrap mb-4">
                             {blog.tags.map((tag) => (
-                                <Tag text={tag} />
+                                <Tag key={tag} text={tag} />
                             ))}
                         </div>
                         <p className="text-gray-600 dark:text-gray-300 mb-4">{blog.excerpt}</p>
