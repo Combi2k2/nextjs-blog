@@ -24,6 +24,8 @@ async function getBlogs() {
     }));
 }
 
+export const revalidate = 3600;
+
 export default async function BlogPage() {
     const blogs = await getBlogs();
     const tagCounts: { [key: string]: number } = {};
