@@ -1,10 +1,9 @@
-import React from 'react';
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import BlogView from '@/components/BlogView';
 
-export default async function Page({ params }: {params: { slug: string }}) {
-    const { slug } = await Promise.resolve(params);
+export default async function Page(props: {params: Promise<{ slug: string }>}) {
+    const params = await props.params;
     const blog = await prisma.blog.findUnique({
         select: {
             title: true,
@@ -12,7 +11,7 @@ export default async function Page({ params }: {params: { slug: string }}) {
             tags: true,
             updatedAt: true
         },
-        where: {slug: slug}
+        where: {slug: params.slug}
     });
     if (!blog) return notFound();
 
