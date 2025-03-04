@@ -3,8 +3,8 @@ import { createBlog } from '@/actions/actions';
 import BlogForm from '@/components/BlogForm';
 
 export default function CreateBlog() {
-    let isSubmitting = false;
-    let error = "";
+    const isSubmitting = false;
+    const error = "";
 
     return (
         <div className="max-w-4xl mx-auto py-8 px-4">

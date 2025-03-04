@@ -28,7 +28,7 @@ export default function About() {
                     Get to know me!
                 </h1>
                 <p>
-                    Hi, my name is Duc Nguyen and I am a{" "}
+                    Hi, my name is Duc Nguyen and I&#39;m a{" "}
                     <span className="font-bold">highly ambitious</span>,
                     <span className="font-bold"> self-motivated</span>, and
                     <span className="font-bold"> driven</span> indie software engineer.
@@ -51,7 +51,7 @@ export default function About() {
                     <span className="font-bold text-teal-500">
                         never stop growing
                     </span>{" "}
-                    and that's what I strive to do, I have a passion for
+                    and that&#39;s what I strive to do, I have a passion for
                     technology and a desire to always push the limits of what is
                     possible. I am excited to see where my career takes me and am
                     always open to new opportunities. 🙂
