@@ -1,5 +1,9 @@
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import rehypeRaw from 'rehype-raw';
 import Tag from './Tag';
 
 interface BlogViewProps {
@@ -26,8 +30,8 @@ export default function BlogView({ title, content, tags, date }: BlogViewProps) 
                 ))}
             </div>
             <article className="prose prose-lg dark:prose-invert">
-                <ReactMarkdown>{content}</ReactMarkdown>
-            </article>
+                <Markdown remarkPlugins={[remarkMath, remarkGfm]} rehypePlugins={[rehypeKatex, rehypeRaw]}>{content}</Markdown>
+            </article>  
         </div>
     );
 }
