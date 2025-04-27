@@ -15,7 +15,7 @@ interface BlogViewProps {
 
 export default function BlogView({ title, content, tags, date }: BlogViewProps) {
     return (
-        <div className="max-w-3xl mx-auto my-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+        <div className="max-w-5xl mx-auto my-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
             <h1 className="text-3xl font-bold mb-4">{title}</h1>
             {date && (
                 <div className="text-gray-500 mb-2">
