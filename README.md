@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Of course! Here's a clean, professional `README.md` based on your content:
 
-## Getting Started
+---
 
-First, run the development server:
+# Personal Blog - Duc Nguyen
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Welcome to my personal blog! 🚀  
+This website is a place where I share my journey, interests, and technical passions.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## About Me
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Hi, my name is **Duc Nguyen** and I'm a highly ambitious, self-motivated, and driven indie software engineer.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+I graduated from **École Polytechnique**, Palaiseau, France in 2024 with a **Bachelor of Science in Computer Science and Mathematics**. Ever since I discovered the beauty of mathematics, I’ve been passionate about tinkering, solving problems, and exploring the world of technology.
 
-## Learn More
+I have a wide range of hobbies and interests, including:
 
-To learn more about Next.js, take a look at the following resources:
+- Algorithm design
+- Keeping up with the latest tech trends
+- Listening to philosophy podcasts
+- Walking, coding, and reading tech blogs
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+I firmly believe in lifelong learning — never stopping, never settling. I'm passionate about technology and constantly pushing the boundaries of what’s possible. I'm excited about what the future holds and always open to new opportunities! 🙂
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## My Skills
 
-## Deploy on Vercel
+Here are some of the technologies and tools I work with:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **JavaScript**
+- **TypeScript**
+- **React**
+- **Next.js**
+- **Python**
+- **FastAPI**
+- **C**
+- **C++**
+- **Git**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+Thanks for visiting my blog! Feel free to connect or reach out if you'd like to chat about tech, philosophy, or anything interesting. 🚀
+
+---
+
+## 📝 TODO
+- [ ] Implement router for CRUD functionality.
+- [ ] Fix math view problem.
+- [ ] Put more consideration for the page front-end.
