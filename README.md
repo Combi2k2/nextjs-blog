@@ -1,7 +1,3 @@
-Of course! Here's a clean, professional `README.md` based on your content:
-
----
-
 # Personal Blog - Duc Nguyen
 
 Welcome to my personal blog! 🚀  
