@@ -43,3 +43,4 @@ Thanks for visiting my blog! Feel free to connect or reach out if you'd like to 
 - [ ] Fix math view problem.
 - [ ] Put more consideration for the page front-end.
 - [ ] Blog preview feature.
+- [ ] BLog comment feature.
