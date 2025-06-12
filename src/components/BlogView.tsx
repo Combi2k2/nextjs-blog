@@ -35,8 +35,9 @@ export default function BlogView({ title, content, tags, date }: BlogViewProps) 
                 <ReactMarkdown
                     remarkPlugins={[remarkMath, remarkGfm]}
                     rehypePlugins={[rehypeKatex, rehypeRaw]}
-                    children={content}
-                />
+                >
+                    content
+                </ReactMarkdown>
             </article>  
         </div>
     );
