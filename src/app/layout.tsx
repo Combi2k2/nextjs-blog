@@ -1,6 +1,6 @@
 "use client"
 import "./globals.css"
-import Navbar from "@/components/Navbar"
+import Header from "@/components/Header"
 import { ThemeProvider } from "next-themes"
 
 export default function RootLayout({
@@ -12,7 +12,7 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning={true}>
             <body className="dark:bg-stone-900">
                 <ThemeProvider enableSystem={true} attribute="class">
-                    <Navbar />
+                    <Header />
                     {children}
                 </ThemeProvider>
             </body>

@@ -18,7 +18,7 @@ const NAV_ITEMS: Array<NavItem> = [
     {label: "Blogs", page: "blogs"},
 ]
 
-export default function Navbar() {
+export default function Header() {
     const { systemTheme, theme, setTheme } = useTheme();
     const currentTheme = theme === "system" ? systemTheme : theme;
     const [navbar, setNavbar] = useState(false);
@@ -51,7 +51,7 @@ export default function Navbar() {
                     return (
                         <Link
                             key={idx}
-                            href={item.page}
+                            href={`/${item.page}`}
                             className ="block lg:inline-block text-neutral-900  hover:text-neutral-500 dark:text-neutral-100 cursor-pointer"
                             onClick={() => setNavbar(!navbar)}
                         >
