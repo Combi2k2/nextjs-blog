@@ -8,6 +8,16 @@ export default {
   ],
   theme: {
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            '.katex-display': {
+              margin: '1em 0',
+              textAlign: 'center',
+            },
+          },
+        },
+      },
       screens: { sm: "480px", md: "768px", lg: "976px", xl: "1440pd" },
       animation: {
         fadeIn: "fadeIn 1.5s",
