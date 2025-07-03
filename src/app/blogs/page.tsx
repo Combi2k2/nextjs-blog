@@ -61,7 +61,7 @@ export default async function BlogPage() {
                         <div className="mb-1">{format(new Date(blog.date), 'MMMM d, yyyy')}</div>
 
                         <h2 className="text-2xl font-bold">
-                            <Link href={`/blogs/${blog.slug}`} className="hover:text-cyan-600 transition">
+                            <Link href={`/blogs/${blog.id}`} className="hover:text-cyan-600 transition">
                                 {blog.title}
                             </Link>
                         </h2>
