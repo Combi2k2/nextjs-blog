@@ -39,6 +39,7 @@ Thanks for visiting my blog! Feel free to connect or reach out if you'd like to 
 ---
 
 ## 📝 TODO
+- [ ] Blog router (use other method other than slug of the blog title)
 - [ ] Implement router for CRUD functionality.
 - [X] Fix math view problem.
 - [ ] Put more consideration for the page front-end.
