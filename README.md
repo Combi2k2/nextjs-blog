@@ -39,10 +39,10 @@ Thanks for visiting my blog! Feel free to connect or reach out if you'd like to 
 ---
 
 ## 📝 TODO
-- [ ] Blog router (use other method other than slug of the blog title)
+- [X] Blog router (use other method other than slug of the blog title)
 - [ ] Implement router for CRUD functionality.
 - [X] Fix math view problem.
 - [ ] Put more consideration for the page front-end.
 - [ ] Blog preview feature.
 - [ ] BLog comment feature.
-- [ ] Blogs fetch everytime going to blogs endpoint (currently failing when going to blogs after editing prisma studio)
+- [X] Blogs fetch everytime going to blogs endpoint (currently failing when going to blogs after editing prisma studio)
