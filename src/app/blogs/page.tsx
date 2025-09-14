@@ -4,31 +4,60 @@ import Tag from '@/components/Tag';
 import { format } from 'date-fns';
 import { prisma } from '@/lib/prisma';
 import { slug } from 'github-slugger';
+import Pagination from '@/components/Pagination';
 
-async function getBlogs() {
-    const blogs = await prisma.blog.findMany({
-        select: {
-            id: true,
-            title: true,
-            slug: true,
-            excerpt: true,
-            updatedAt: true,
-            tags: true,
-        },
-        orderBy: {updatedAt: 'desc'}
-    });
+const BLOGS_PER_PAGE = 5;
 
-    return blogs.map((blog) => ({
-        ...blog,
-        date: blog.updatedAt.toISOString(),
-    }));
+async function getBlogs(page: number = 1) {
+    const skip = (page - 1) * BLOGS_PER_PAGE;
+    
+    const [blogs, totalCount] = await Promise.all([
+        prisma.blog.findMany({
+            select: {
+                id: true,
+                title: true,
+                excerpt: true,
+                updatedAt: true,
+                tags: true,
+            },
+            orderBy: { updatedAt: 'desc' },
+            skip,
+            take: BLOGS_PER_PAGE,
+        }),
+        prisma.blog.count()
+    ]);
+
+    const totalPages = Math.ceil(totalCount / BLOGS_PER_PAGE);
+
+    return {
+        blogs: blogs.map((blog) => ({
+            ...blog,
+            date: blog.updatedAt.toISOString(),
+        })),
+        totalPages,
+        currentPage: page,
+    };
 }
 
-export default async function BlogPage() {
-    const blogs = await getBlogs();
+interface BlogPageProps {
+  searchParams: Promise<{
+    page?: string;
+  }>;
+}
+
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+    const resolvedParams = await searchParams;
+    const page = parseInt(resolvedParams.page || '1', 10);
+    
+    const { blogs, totalPages, currentPage } = await getBlogs(page);
     const tagCounts: { [key: string]: number } = {};
 
-    blogs.forEach((blog) => {
+    // Get all blogs for tag counting (not paginated)
+    const allBlogs = await prisma.blog.findMany({
+        select: { tags: true }
+    });
+
+    allBlogs.forEach((blog) => {
         blog.tags.forEach((tag) => {
             tagCounts[tag] = (tagCounts[tag] || 0) + 1;
         });
@@ -74,6 +103,12 @@ export default async function BlogPage() {
                         <p className="text-gray-600 dark:text-gray-300 mb-4">{blog.excerpt}</p>
                     </div>
                 ))}
+                
+                <Pagination 
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    baseUrl="/blogs"
+                />
             </div>
         </div>
     );
