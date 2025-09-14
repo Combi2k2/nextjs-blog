@@ -15,7 +15,6 @@ datasource db {
 
 model Blog {
     id              String  @id @default(cuid())
-    slug            String  @unique
     title           String
     content         String  @db.Text
     excerpt         String  @db.Text
