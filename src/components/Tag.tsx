@@ -5,7 +5,7 @@ export default function Tag({ text }: {text: string}) {
     return (
         <Link
             href={`/tags/${slug(text)}`}
-            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 mr-3 text-sm font-medium uppercase hover:text-teal-600"
+            className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 text-sm font-medium uppercase transition-colors"
         >
         {text.toUpperCase()}
         </Link>

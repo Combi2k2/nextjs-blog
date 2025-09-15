@@ -69,18 +69,19 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             <div className="w-72 p-6 border-r border-gray-800">
                 <div className="mb-8">
                     <h3 className="font-bold mb-5">ALL POSTS</h3>
-                    {tags.map((tag) => (
-                        <div key={tag} className="mb-2 ml-5">
-                            <Tag text={tag} />
+                    <div className="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
                             <Link
+                                key={tag}
                                 href={`/tags/${slug(tag)}`}
-                                className="-ml-2 text-sm font-semibold text-gray-600 uppercase dark:text-gray-300 hover:text-teal-600"
+                                className="inline-flex items-center bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                                 aria-label={`View posts tagged ${tag}`}
                             >
-                            {` (${tagCounts[tag]})`}
+                                <span className="uppercase">{tag}</span>
+                                <span className="ml-1 text-xs opacity-75">({tagCounts[tag]})</span>
                             </Link>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
 
@@ -95,9 +96,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                             </Link>
                         </h2>
 
-                        <div className="flex flex-wrap mb-4">
+                        <div className="flex flex-wrap gap-2 mb-4">
                             {blog.tags.map((tag) => (
-                                <Tag key={tag} text={tag} />
+                                <span key={tag} className="inline-flex items-center bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                                    <Tag text={tag} />
+                                </span>
                             ))}
                         </div>
                         <p className="text-gray-600 dark:text-gray-300 mb-4">{blog.excerpt}</p>

@@ -22,18 +22,17 @@ export default async function Page() {
                     Tags
                 </h1>
             </div>
-            <div className="flex max-w-lg flex-wrap">
+            <div className="flex max-w-lg flex-wrap gap-2">
                 {tags.map((tag) => (
-                    <div key={tag} className="mt-2 mr-5 mb-2">
-                        <Tag text={tag} />
-                        <Link
-                            href={`/tags/${slug(tag)}`}
-                            className="-ml-2 text-sm font-semibold text-gray-600 uppercase dark:text-gray-300"
-                            aria-label={`View posts tagged ${tag}`}
-                        >
-                        {` (${tagCounts[tag]})`}
-                        </Link>
-                    </div>
+                    <Link
+                        key={tag}
+                        href={`/tags/${slug(tag)}`}
+                        className="inline-flex items-center bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                        aria-label={`View posts tagged ${tag}`}
+                    >
+                        <span className="uppercase">{tag}</span>
+                        <span className="ml-1 text-xs opacity-75">({tagCounts[tag]})</span>
+                    </Link>
                 ))}
             </div>
         </div>

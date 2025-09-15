@@ -61,9 +61,9 @@ export default function BlogView({ title, content, tags, date }: BlogViewProps) 
                         {date.toLocaleDateString()}
                     </div>
                 )}
-                <div className="mb-6">
+                <div className="mb-6 flex flex-wrap gap-2">
                     {tags.map((tag) => (
-                        <span key={tag} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                        <span key={tag} className="inline-flex items-center bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                             <Tag text={tag} />
                         </span>
                     ))}
