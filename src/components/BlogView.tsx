@@ -4,6 +4,8 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { tomorrow, darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Tag from './Tag';
 
 import 'katex/dist/katex.min.css';
@@ -16,6 +18,40 @@ interface BlogViewProps {
 }
 
 export default function BlogView({ title, content, tags, date }: BlogViewProps) {
+    // Custom components for syntax highlighting
+    const components = {
+        code({ node, inline, className, children, ...props }: any) {
+            const match = /language-(\w+)/.exec(className || '');
+            const language = match ? match[1] : '';
+            
+            // Only apply SyntaxHighlighter for code blocks (not inline) with language
+            if ((inline === false || inline === undefined) && language) {
+                return (
+                    <SyntaxHighlighter
+                        style={typeof window !== 'undefined' && document.documentElement.classList.contains('dark') ? darcula : tomorrow}
+                        language={language}
+                        PreTag="div"
+                        className="rounded-md my-4"
+                        {...props}
+                    >
+                        {String(children).replace(/\n$/, '')}
+                    </SyntaxHighlighter>
+                );
+            }
+            
+            // Inline code or code without language - simple styling
+            return (
+                <code className="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-sm font-mono" {...props}>
+                    {children}
+                </code>
+            );
+        },
+        pre({ children, ...props }: any) {
+            // For code blocks, just pass through to let the code component handle it
+            return <pre {...props}>{children}</pre>;
+        }
+    };
+
     return (
         <div className="w-full max-w-4xl mx-auto my-8 bg-white dark:bg-gray-800 rounded-lg shadow-md">
             <div className="px-6 py-6 md:px-8 md:py-8">
@@ -37,6 +73,7 @@ export default function BlogView({ title, content, tags, date }: BlogViewProps) 
                         remarkPlugins={[remarkMath, [remarkGfm, { singleTilde: true }]]}
                         rehypePlugins={[rehypeKatex, rehypeRaw]}
                         remarkRehypeOptions={{ allowDangerousHtml: true }}
+                        components={components}
                     >
                         {content}
                     </Markdown>
