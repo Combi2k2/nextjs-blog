@@ -26,5 +26,6 @@ export default async function StudioPage({ searchParams }: { searchParams?: Prom
   }
   
   // If no valid session, show login form
-  return <StudioLoginForm searchParams={searchParams} />;
+  const params = await searchParams;
+  return <StudioLoginForm error={params?.error} />;
 }
