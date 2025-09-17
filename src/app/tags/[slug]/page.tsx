@@ -2,9 +2,8 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { slug } from 'github-slugger';
 import Link from 'next/link';
-import { format } from 'date-fns';
-import Tag from '@/components/Tag';
 import Pagination from '@/components/Pagination';
+import BlogCard from '@/components/BlogCard';
 
 const BLOGS_PER_PAGE = 5;
 
@@ -88,23 +87,16 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
 
       <div className="flex-1 p-8 max-w-4xl">
         {blogs.map((blog) => (
-          <div key={blog.id} className="mb-16">
-            <div className="mb-1">{format(new Date(blog.updatedAt), 'MMMM d, yyyy')}</div>
-
-            <h2 className="text-2xl font-bold">
-              <Link href={`/blogs/${blog.id}`} className="hover:text-cyan-600 transition">
-                {blog.title}
-              </Link>
-            </h2>
-
-            <div className="flex flex-wrap mb-4">
-              {blog.tags.map((tag) => (
-                <Tag key={tag} text={tag} />
-              ))}
-            </div>
-            
-            <p className="text-gray-600 dark:text-gray-300 mb-4">{blog.excerpt}</p>
-          </div>
+          <BlogCard 
+            key={blog.id} 
+            blog={{
+              id: blog.id,
+              title: blog.title,
+              excerpt: blog.excerpt,
+              tags: blog.tags,
+              updatedAt: blog.updatedAt
+            }}
+          />
         ))}
         
         <Pagination 
