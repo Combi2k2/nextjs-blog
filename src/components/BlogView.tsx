@@ -6,6 +6,7 @@ import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow, darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { formatDistanceToNow } from 'date-fns';
 import Tag from './Tag';
 
 import 'katex/dist/katex.min.css';
@@ -57,8 +58,8 @@ export default function BlogView({ title, content, tags, date }: BlogViewProps) 
             <div className="px-6 py-6 md:px-8 md:py-8">
                 <h1 className="text-3xl font-bold mb-4">{title}</h1>
                 {date && (
-                    <div className="text-gray-500 mb-2">
-                        {date.toLocaleDateString()}
+                    <div className="text-gray-500 dark:text-gray-400 mb-2 text-sm">
+                        {formatDistanceToNow(new Date(date), { addSuffix: true })}
                     </div>
                 )}
                 <div className="mb-6 flex flex-wrap gap-2">
