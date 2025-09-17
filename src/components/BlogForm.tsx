@@ -35,7 +35,7 @@ export default function BlogForm({ initialData, onSubmit, isSubmitting, error }:
     const tagArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 pt-24">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">
                     {initialData?.id ? 'Edit Blog' : 'Create New Blog'}
