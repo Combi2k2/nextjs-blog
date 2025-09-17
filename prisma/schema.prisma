@@ -21,6 +21,18 @@ model Blog {
     tags            String[]
     updatedAt       DateTime    @updatedAt
     createdAt       DateTime    @default(now())
+    comments        Comment[]
 
     @@map("blogs")
+}
+
+model Comment {
+    id          String   @id @default(cuid())
+    blogId      String
+    name        String
+    content     String   @db.Text
+    timestamp   DateTime @default(now())
+    blog        Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+
+    @@map("comments")
 }
