@@ -28,14 +28,14 @@ export default async function StudioBlogsPage() {
     const blogs = await getBlogs();
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 pt-24">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold">Blog Management</h1>
                 <Link 
                     href="/studio/blogs/create" 
-                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200"
                 >
-                    <FiPlus /> New Blog
+                    <FiPlus size={20} /> Create New Blog
                 </Link>
             </div>
             
