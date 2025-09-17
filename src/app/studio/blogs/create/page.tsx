@@ -1,14 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import BlogForm from '@/components/BlogForm';
 import { createBlog } from '@/actions/studio-crud';
 
 export default function CreateBlogPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
     setIsSubmitting(true);

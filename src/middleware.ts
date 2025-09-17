@@ -29,7 +29,7 @@ export function middleware(request: NextRequest) {
         response.cookies.delete('studio_session');
         return response;
       }
-    } catch (error) {
+    } catch {
       // If cookie format is invalid, clear it and redirect to login
       const response = NextResponse.redirect(new URL('/studio', request.url));
       response.cookies.delete('studio_session');

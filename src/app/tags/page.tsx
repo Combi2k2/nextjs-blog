@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Tag from '@/components/Tag';
 import { slug } from 'github-slugger';
 import { prisma } from '@/lib/prisma';
 

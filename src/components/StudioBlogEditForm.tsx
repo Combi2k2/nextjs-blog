@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import BlogForm from '@/components/BlogForm';
 import { updateBlog } from '@/actions/studio-crud';
 
@@ -18,7 +17,6 @@ interface StudioBlogEditFormProps {
 export default function StudioBlogEditForm({ blog }: StudioBlogEditFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
     setIsSubmitting(true);

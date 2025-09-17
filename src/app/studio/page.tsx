@@ -20,7 +20,7 @@ export default async function StudioPage({ searchParams }: { searchParams?: Prom
         // Cookie is valid, redirect to studio/blogs
         redirect('/studio/blogs');
       }
-    } catch (error) {
+    } catch {
       // If cookie format is invalid, continue to login form
     }
   }
