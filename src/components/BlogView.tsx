@@ -20,7 +20,7 @@ interface BlogViewProps {
 export default function BlogView({ title, content, tags, date }: BlogViewProps) {
     // Custom components for syntax highlighting
     const components = {
-        code({ node, inline, className, children, ...props }: any) {
+        code({ inline, className, children, ...props }: any) {
             const match = /language-(\w+)/.exec(className || '');
             const language = match ? match[1] : '';
             
@@ -53,7 +53,7 @@ export default function BlogView({ title, content, tags, date }: BlogViewProps) 
     };
 
     return (
-        <div className="w-full max-w-4xl mx-auto my-8 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+        <div className="w-full my-8 bg-white dark:bg-gray-800 rounded-lg shadow-md">
             <div className="px-6 py-6 md:px-8 md:py-8">
                 <h1 className="text-3xl font-bold mb-4">{title}</h1>
                 {date && (

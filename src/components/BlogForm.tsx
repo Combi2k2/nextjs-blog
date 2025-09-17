@@ -83,7 +83,7 @@ export default function BlogForm({ initialData, onSubmit, isSubmitting, error }:
                                     title={title || 'Blog Title'} 
                                     content={content || 'Blog content will appear here...'} 
                                     tags={tagArray.length > 0 ? tagArray : ['example']} 
-                                    date={new Date()} 
+                                    date={new Date()}
                                 />
                             </div>
                         </div>
