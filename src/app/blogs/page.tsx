@@ -108,15 +108,15 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         : '/blogs';
 
     return (
-        <div className="fixed top-20 left-0 right-0 bottom-0 flex">
+        <>
             <TagFilter 
                 allTags={tags}
                 tagCounts={tagCounts}
                 selectedTags={selectedTags}
             />
 
-            <div className="flex-1 overflow-y-auto">
-                <div className="p-8 max-w-4xl mx-auto">
+            <div className="lg:ml-80 min-h-screen pt-20">
+                <div className="p-4 lg:p-8 max-w-4xl mx-auto">
                 {blogs.length === 0 ? (
                     <div className="text-center py-12">
                         <h3 className="text-lg font-medium mb-2 text-gray-700 dark:text-gray-300">
@@ -156,6 +156,6 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 )}
                 </div>
             </div>
-        </div>
+        </>
     );
 }
