@@ -19,7 +19,12 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning={true}>
             <body className="dark:bg-stone-900">
-                <ThemeProvider enableSystem={true} attribute="class">
+                <ThemeProvider 
+                    enableSystem={true} 
+                    attribute="class"
+                    defaultTheme="dark"
+                    disableTransitionOnChange={false}
+                >
                     <Header />
                     {children}
                 </ThemeProvider>
