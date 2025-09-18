@@ -45,12 +45,7 @@ export default function BlogCard({ blog, className = '' }: BlogCardProps) {
 
       <div className="flex flex-wrap gap-2 mb-4">
         {blog.tags.map((tag) => (
-          <span 
-            key={tag} 
-            className="inline-flex items-center bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-          >
-            <Tag text={tag} />
-          </span>
+          <Tag key={tag} text={tag} enableNavigation={true} />
         ))}
       </div>
 
