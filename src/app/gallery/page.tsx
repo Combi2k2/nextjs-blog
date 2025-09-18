@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { S3Image } from '@/lib/aws-s3';
 import { FiImage } from 'react-icons/fi';
@@ -9,7 +9,7 @@ import ImageCard from '@/components/ImageCard';
 import ImageView from '@/components/ImageView';
 import { getGalleryImagesWithUrls } from '@/actions/studio-crud';
 
-export default function GalleryPage() {
+function GalleryContent() {
   const searchParams = useSearchParams();
   const [images, setImages] = useState<S3Image[]>([]);
   const [loading, setLoading] = useState(true);
@@ -153,5 +153,20 @@ export default function GalleryPage() {
         onClose={closeLightbox}
       />
     </div>
+  );
+}
+
+export default function GalleryPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8 pt-24">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading gallery...</p>
+        </div>
+      </div>
+    }>
+      <GalleryContent />
+    </Suspense>
   );
 }

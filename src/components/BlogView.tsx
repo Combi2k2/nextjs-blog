@@ -21,7 +21,7 @@ interface BlogViewProps {
 export default function BlogView({ title, content, tags, date }: BlogViewProps) {
     // Custom components for syntax highlighting
     const components = {
-        code({ inline, className, children, ...props }: any) {
+        code({ inline, className, children, ...props }: React.ComponentProps<'code'> & { inline?: boolean }) {
             const match = /language-(\w+)/.exec(className || '');
             const language = match ? match[1] : '';
             
@@ -33,7 +33,6 @@ export default function BlogView({ title, content, tags, date }: BlogViewProps) 
                         language={language}
                         PreTag="div"
                         className="rounded-md my-4"
-                        {...props}
                     >
                         {String(children).replace(/\n$/, '')}
                     </SyntaxHighlighter>
@@ -47,7 +46,7 @@ export default function BlogView({ title, content, tags, date }: BlogViewProps) 
                 </code>
             );
         },
-        pre({ children, ...props }: any) {
+        pre({ children, ...props }: React.ComponentProps<'pre'>) {
             // For code blocks, just pass through to let the code component handle it
             return <pre {...props}>{children}</pre>;
         }

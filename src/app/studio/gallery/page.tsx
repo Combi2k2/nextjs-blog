@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { S3Image } from '@/lib/aws-s3';
 import { FiUpload, FiImage, FiTrash2 } from 'react-icons/fi';
@@ -9,7 +9,7 @@ import ImageCard from '@/components/ImageCard';
 import ImageView from '@/components/ImageView';
 import { getGalleryImagesWithUrls, uploadGalleryImage, deleteGalleryImage } from '@/actions/studio-crud';
 
-export default function StudioGalleryPage() {
+function StudioGalleryContent() {
   const searchParams = useSearchParams();
   const [images, setImages] = useState<S3Image[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,6 +53,21 @@ export default function StudioGalleryPage() {
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
+    // Client-side file size validation
+    const maxSize = 50 * 1024 * 1024; // 50MB
+    if (file.size > maxSize) {
+      const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
+      setUploadError(`File size too large (${fileSizeMB}MB). Maximum size is 50MB.`);
+      return;
+    }
+
+    // Check file type
+    const imageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+    if (!imageTypes.includes(file.type)) {
+      setUploadError(`Unsupported file type: ${file.type}. Please upload an image file.`);
+      return;
+    }
 
     setIsUploading(true);
     setUploadError('');
@@ -183,6 +198,7 @@ export default function StudioGalleryPage() {
             <input
               ref={fileInputRef}
               type="file"
+              accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/svg+xml"
               onChange={handleFileUpload}
               disabled={isUploading}
               className="hidden"
@@ -202,12 +218,12 @@ export default function StudioGalleryPage() {
               ) : (
                 <>
                   <FiUpload size={16} />
-                  Choose File
+                  Choose Image
                 </>
               )}
             </label>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              Max size: 50MB. All file types supported.
+              Max size: 50MB. Supported: JPEG, PNG, GIF, WebP, SVG
             </span>
           </div>
         </div>
@@ -269,5 +285,20 @@ export default function StudioGalleryPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function StudioGalleryPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8 pt-24">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading gallery...</p>
+        </div>
+      </div>
+    }>
+      <StudioGalleryContent />
+    </Suspense>
   );
 }

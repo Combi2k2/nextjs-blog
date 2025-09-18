@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import Pagination from '@/components/Pagination';
 import BlogCard from '@/components/BlogCard';
@@ -92,7 +93,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     const selectedTags = resolvedParams.tags ? resolvedParams.tags.split(',').filter(Boolean) : [];
     
     const [
-        { blogs, totalPages, currentPage, totalCount, filteredCount },
+        { blogs, totalPages, currentPage },
         tagCounts
     ] = await Promise.all([
         getBlogs(page, selectedTags),
@@ -124,12 +125,12 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                         <p className="text-gray-500 dark:text-gray-400 mb-4">
                             No posts match the selected tag filters.
                         </p>
-                        <a 
+                        <Link 
                             href="/blogs" 
                             className="text-teal-600 hover:text-teal-800 dark:hover:text-teal-400"
                         >
                             View all posts
-                        </a>
+                        </Link>
                     </div>
                 ) : (
                     <>

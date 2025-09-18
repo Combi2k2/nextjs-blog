@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useState, useTransition } from 'react'
-import { createComment, type CreateCommentData } from '@/actions/comment-actions'
+import { createComment, type Comment } from '@/actions/comment-actions'
 
 interface CommentFormProps {
     blogId: string
-    onCommentAdded?: (comment: any) => void
+    onCommentAdded?: (comment: Comment) => void
     onClose?: () => void
     className?: string
 }

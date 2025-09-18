@@ -1,7 +1,4 @@
-'use client';
-
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 
 interface PaginationProps {
   currentPage: number;
@@ -10,18 +7,15 @@ interface PaginationProps {
 }
 
 export default function Pagination({ currentPage, totalPages, baseUrl }: PaginationProps) {
-  const searchParams = useSearchParams();
-  
-  // Create URL with search params preserved
+  // Create URL for pagination
   const createUrl = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const url = new URL(baseUrl, 'http://localhost');
     if (page === 1) {
-      params.delete('page');
+      url.searchParams.delete('page');
     } else {
-      params.set('page', page.toString());
+      url.searchParams.set('page', page.toString());
     }
-    const queryString = params.toString();
-    return `${baseUrl}${queryString ? `?${queryString}` : ''}`;
+    return url.pathname + url.search;
   };
 
   // Don't show pagination if there's only one page

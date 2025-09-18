@@ -24,7 +24,7 @@ export default function StudioDashboardPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-4">Studio Dashboard</h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Welcome to your content management studio. Choose what you'd like to manage.
+          Welcome to your content management studio. Choose what you&apos;d like to manage.
         </p>
       </div>
 
