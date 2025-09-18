@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.891.0",
+    "@aws-sdk/s3-request-presigner": "^3.891.0",
     "@prisma/client": "^6.9.0",
     "@tailwindcss/typography": "^0.5.16",
     "@types/react-syntax-highlighter": "^15.5.13",
