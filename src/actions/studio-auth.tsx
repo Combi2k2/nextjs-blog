@@ -30,7 +30,7 @@ export async function verifyPassword(formData: FormData) {
     });
     
     // Redirect after setting the cookie
-    redirect('/studio/blogs');
+    redirect('/studio/dashboard');
   }
   // Invalid password - redirect back to login with error
   redirect('/studio?error=invalid');

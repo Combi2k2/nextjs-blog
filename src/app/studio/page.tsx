@@ -17,8 +17,8 @@ export default async function StudioPage({ searchParams }: { searchParams?: Prom
       const twoHours = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
       
       if (currentTime - cookieTime <= twoHours) {
-        // Cookie is valid, redirect to studio/blogs
-        redirect('/studio/blogs');
+        // Cookie is valid, redirect to studio dashboard
+        redirect('/studio/dashboard');
       }
     } catch {
       // If cookie format is invalid, continue to login form
