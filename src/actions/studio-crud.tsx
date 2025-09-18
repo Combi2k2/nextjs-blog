@@ -4,22 +4,27 @@ import { prisma } from "@/lib/prisma"
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { listFiles, uploadFile, deleteFile, getFileUrl } from "@/lib/aws-s3";
+import { addTagsToCache, updateTagsInCache, removeTagsFromCache } from "@/utils/tag-cache";
 
 export async function createBlog(formData: FormData) {
     const title = formData.get("title") as string;
+    const tags = (formData.get("tags") as string)
+        .split(',')
+        .map((tag: string) => tag.trim())
+        .filter((tag: string) => tag !== '');
 
     const blog = await prisma.blog.create({
         data: {
             title: title,
             content: formData.get("content") as string,
             excerpt: formData.get("summary") as string,
-            tags: (formData.get("tags") as string)
-                .split(',')
-                .map((tag: string) => tag.trim())
-                .filter((tag: string) => tag !== '')
+            tags: tags
         }
     });
 
+    // Add new tags to cache
+    addTagsToCache(tags);
+    
     revalidatePath("/blogs");
     revalidatePath(`/blogs/${blog.id}`);
     revalidatePath("/studio/blogs");
@@ -28,6 +33,16 @@ export async function createBlog(formData: FormData) {
 
 export async function updateBlog(id: string, formData: FormData) {
     const title = formData.get("title") as string;
+    const newTags = (formData.get("tags") as string)
+        .split(',')
+        .map((tag: string) => tag.trim())
+        .filter((tag: string) => tag !== '');
+
+    // Get old tags before updating
+    const oldBlog = await prisma.blog.findUnique({
+        where: { id },
+        select: { tags: true }
+    });
 
     const blog = await prisma.blog.update({
         where: {
@@ -37,13 +52,15 @@ export async function updateBlog(id: string, formData: FormData) {
             title: title,
             content: formData.get("content") as string,
             excerpt: formData.get("summary") as string,
-            tags: (formData.get("tags") as string)
-                .split(',')
-                .map((tag: string) => tag.trim())
-                .filter((tag: string) => tag !== '')
+            tags: newTags
         }
     });
 
+    // Update tags in cache
+    if (oldBlog) {
+        updateTagsInCache(oldBlog.tags, newTags);
+    }
+    
     revalidatePath("/blogs");
     revalidatePath(`/blogs/${blog.id}`);
     revalidatePath("/studio/blogs");
@@ -51,12 +68,23 @@ export async function updateBlog(id: string, formData: FormData) {
 }
 
 export async function deleteBlog(id: string) {
+    // Get tags before deleting
+    const blog = await prisma.blog.findUnique({
+        where: { id },
+        select: { tags: true }
+    });
+
     await prisma.blog.delete({
         where: {
             id: id,
         },
     });
 
+    // Remove tags from cache
+    if (blog) {
+        removeTagsFromCache(blog.tags);
+    }
+    
     revalidatePath("/blogs");
     revalidatePath("/studio/blogs");
     redirect("/studio/blogs");
