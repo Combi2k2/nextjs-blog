@@ -115,7 +115,14 @@ export async function uploadGalleryFile(formData: FormData) {
         // Validate file size (max 50MB for general files)
         const maxSize = 50 * 1024 * 1024; // 50MB
         if (file.size > maxSize) {
-            throw new Error('File size too large. Maximum size is 50MB.');
+            const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
+            throw new Error(`File size too large (${fileSizeMB}MB). Maximum size is 50MB.`);
+        }
+
+        // Check file type for images
+        const imageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+        if (!imageTypes.includes(file.type)) {
+            throw new Error(`Unsupported file type: ${file.type}. Please upload an image file (JPEG, PNG, GIF, WebP, or SVG).`);
         }
 
         // Create file key
