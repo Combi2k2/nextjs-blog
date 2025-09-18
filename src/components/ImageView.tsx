@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { S3Image } from '@/lib/aws-s3';
 import { FiX, FiImage, FiInfo } from 'react-icons/fi';
 
@@ -12,31 +13,22 @@ interface ImageViewProps {
 
 export default function ImageView({ image, isOpen, onClose }: ImageViewProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
+  // Ensure component is mounted before using portals
   useEffect(() => {
-    if (!isOpen || !image) {
-      setImageUrl(null);
-      setIsLoading(true);
-      setHasError(false);
-      return;
-    }
+    setMounted(true);
+  }, []);
 
-    // Use the URL from the image object if available
-    if (image.url) {
-      setImageUrl(image.url);
-      setIsLoading(false);
+  // Get image URL when component mounts or image changes
+  useEffect(() => {
+    if (image && isOpen) {
+      setImageUrl(image.url || null);
       setHasError(false);
-    } else {
-      // If no URL is provided, show error state
-      setImageUrl(null);
-      setIsLoading(false);
-      setHasError(true);
     }
   }, [image, isOpen]);
-
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -44,14 +36,13 @@ export default function ImageView({ image, isOpen, onClose }: ImageViewProps) {
     }
   };
 
-
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      onClose();
-    }
-  };
-
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
       // Prevent body scroll and ensure full viewport coverage
@@ -73,15 +64,15 @@ export default function ImageView({ image, isOpen, onClose }: ImageViewProps) {
       document.body.style.width = 'unset';
       document.body.style.height = 'unset';
     };
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
-  if (!isOpen || !image) {
+  if (!isOpen || !image || !mounted) {
     return null;
   }
 
-  return (
+  const modalContent = (
     <div 
-      className="bg-black bg-opacity-90 flex items-center justify-center"
+      className="fixed bg-black bg-opacity-90 flex items-center justify-center"
       style={{ 
         position: 'fixed',
         top: 0,
@@ -90,10 +81,7 @@ export default function ImageView({ image, isOpen, onClose }: ImageViewProps) {
         bottom: 0,
         width: '100vw',
         height: '100vh',
-        zIndex: 9999,
-        margin: 0,
-        padding: '1rem',
-        boxSizing: 'border-box'
+        zIndex: 99999
       }}
       onClick={handleBackdropClick}
     >
@@ -150,35 +138,33 @@ export default function ImageView({ image, isOpen, onClose }: ImageViewProps) {
       )}
 
       {/* Main Image Container */}
-      <div 
-        className="relative w-full h-full max-w-[90vw] max-h-[90vh] sm:max-w-[85vw] sm:max-h-[85vh] md:max-w-[80vw] md:max-h-[80vh] lg:max-w-[75vw] lg:max-h-[75vh] xl:max-w-[70vw] xl:max-h-[70vh]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-center w-full h-full">
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center p-6 sm:p-12">
-              <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-white mb-4"></div>
-              <p className="text-white text-base sm:text-lg">Loading image...</p>
-            </div>
-          ) : hasError || !imageUrl ? (
-            <div className="flex flex-col items-center justify-center p-6 sm:p-12 text-white">
-              <FiImage size={48} className="sm:w-16 sm:h-16 mb-4 text-gray-400" />
-              <p className="text-base sm:text-lg">Failed to load image</p>
-              <p className="text-xs sm:text-sm text-gray-400 mt-2 text-center break-words">{image.name}</p>
-            </div>
-          ) : (
+      <div className="relative w-full h-full p-4 sm:p-8 flex items-center justify-center">
+        {hasError || !imageUrl ? (
+          <div className="flex flex-col items-center justify-center text-white p-8 sm:p-12">
+            <FiImage size={48} className="sm:w-16 sm:h-16 mb-4 text-gray-400" />
+            <p className="text-base sm:text-lg">Failed to load image</p>
+            <p className="text-xs sm:text-sm text-gray-400 mt-2 text-center break-words">{image.name}</p>
+          </div>
+        ) : (
+          <div className="relative w-full h-full flex items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imageUrl}
               alt={image.name}
-              className="w-full h-full object-contain rounded-lg shadow-2xl"
+              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
               style={{ 
-                maxWidth: '100%',
-                maxHeight: '100%'
+                width: 'auto',
+                height: 'auto',
+                maxWidth: 'calc(100vw - 2rem)',
+                maxHeight: 'calc(100vh - 2rem)'
               }}
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
+
+  // Render modal using portal to ensure it's at the top level of the DOM
+  return createPortal(modalContent, document.body);
 }
