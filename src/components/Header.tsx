@@ -16,6 +16,7 @@ const NAV_ITEMS: Array<NavItem> = [
     {label: "Home", page: "/"},
     {label: "About", page: "about"},
     {label: "Blogs", page: "blogs"},
+    {label: "Gallery", page: "gallery"},
 ]
 
 export default function Header() {
