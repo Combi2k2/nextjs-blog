@@ -90,18 +90,60 @@ export async function deleteBlog(id: string) {
     redirect("/studio/blogs");
 }
 
-// Gallery Management Actions
+// Project Management Actions
 
-export async function getGalleryImages(folder: string = '', maxKeys: number = 1000) {
-    try {
-        // Filter for image files only
-        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'];
-        return await listFiles(folder, maxKeys, imageExtensions);
-    } catch (error) {
-        console.error('Error fetching gallery images:', error);
-        throw new Error('Failed to fetch gallery images');
+async function resolveProjectThumbnail(formData: FormData): Promise<string | null> {
+    const file = formData.get("thumbnailFile") as File | null;
+    if (file && file.size > 0) {
+        const timestamp = Date.now();
+        const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const key = `projects/${timestamp}-${cleanName}`;
+        const buffer = Buffer.from(await file.arrayBuffer());
+        await uploadFile(key, buffer, file.type);
+        return key;
     }
+    return (formData.get("thumbnailKey") as string) || null;
 }
+
+export async function createProject(formData: FormData) {
+    const name = formData.get("name") as string;
+    const desc = formData.get("desc") as string;
+    const link = (formData.get("link") as string) || null;
+    const thumbnailKey = await resolveProjectThumbnail(formData);
+
+    await prisma.project.create({
+        data: { name, desc, thumbnailKey, link }
+    });
+
+    revalidatePath("/projects");
+    revalidatePath("/studio/projects");
+    redirect("/studio/projects");
+}
+
+export async function updateProject(id: string, formData: FormData) {
+    const name = formData.get("name") as string;
+    const desc = formData.get("desc") as string;
+    const link = (formData.get("link") as string) || null;
+    const thumbnailKey = await resolveProjectThumbnail(formData);
+
+    await prisma.project.update({
+        where: { id },
+        data: { name, desc, thumbnailKey, link }
+    });
+
+    revalidatePath("/projects");
+    revalidatePath("/studio/projects");
+    redirect("/studio/projects");
+}
+
+export async function deleteProject(id: string) {
+    await prisma.project.delete({ where: { id } });
+    revalidatePath("/projects");
+    revalidatePath("/studio/projects");
+    redirect("/studio/projects");
+}
+
+// Gallery Management Actions
 
 export async function uploadGalleryFile(formData: FormData) {
     try {
@@ -128,7 +170,8 @@ export async function uploadGalleryFile(formData: FormData) {
         // Create file key
         const timestamp = Date.now();
         const cleanFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const key = folder ? `${folder}/${timestamp}-${cleanFileName}` : `${timestamp}-${cleanFileName}`;
+        const baseFolder = folder || 'gallery';
+        const key = `${baseFolder}/${timestamp}-${cleanFileName}`;
 
         // Convert file to buffer
         const bytes = await file.arrayBuffer();
@@ -146,11 +189,6 @@ export async function uploadGalleryFile(formData: FormData) {
     }
 }
 
-// Legacy function for backward compatibility
-export async function uploadGalleryImage(formData: FormData) {
-    return uploadGalleryFile(formData);
-}
-
 export async function deleteGalleryFile(key: string) {
     try {
         await deleteFile(key);
@@ -163,32 +201,12 @@ export async function deleteGalleryFile(key: string) {
     }
 }
 
-// Legacy function for backward compatibility
-export async function deleteGalleryImage(key: string) {
-    return deleteGalleryFile(key);
-}
-
-export async function getGalleryFileUrl(key: string) {
+export async function getGalleryImagesWithUrls(folder: string = 'gallery', maxKeys: number = 1000) {
     try {
-        return await getFileUrl(key);
-    } catch (error) {
-        console.error('Error getting file URL:', error);
-        throw new Error('Failed to get file URL');
-    }
-}
-
-// Legacy function for backward compatibility
-export async function getGalleryImageUrl(key: string) {
-    return getGalleryFileUrl(key);
-}
-
-// Enhanced function to get images with their URLs
-export async function getGalleryImagesWithUrls(folder: string = '', maxKeys: number = 1000) {
-    try {
-        // Filter for image files only
         const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'];
-        const images = await listFiles(folder, maxKeys, imageExtensions);
-        
+        const rawImages = await listFiles(folder, maxKeys, imageExtensions);
+        const images = rawImages.sort((a, b) => (b.lastModified?.getTime() ?? 0) - (a.lastModified?.getTime() ?? 0));
+
         // Get URLs for all images
         const imagesWithUrls = await Promise.all(
             images.map(async (image) => {
