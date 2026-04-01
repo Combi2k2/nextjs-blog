@@ -40,7 +40,6 @@ Thanks for visiting my blog! Feel free to connect or reach out if you'd like to 
 
 ## 📝 TODO
 - [X] Code highlighting feature.
-- [ ] Router for blog series
 - [X] Blog router (use other method other than slug of the blog title)
 - [X] Implement router for CRUD functionality.
 - [X] Fix math view problem.
