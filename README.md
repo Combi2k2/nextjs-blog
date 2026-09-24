@@ -51,4 +51,8 @@ Thanks for visiting my blog! Feel free to connect or reach out if you'd like to 
 - [X] Blogs fetch everytime going to blogs endpoint (currently failing when going to blogs after editing prisma studio)
 - [X] Image gallery with self-hosted S3 storage.
 - [X] Projects page and studio CRUD.
-- [ ] Query / asset-loading optimization: paginate S3 listing + presign on `/gallery` (currently presigns all objects per visit), push tag filter to DB with `hasEvery` on `/blogs`, cache or long-expiry project thumbnails on `/projects`, and consider Prisma Accelerate or a pooled connection string.
+- [ ] Query / asset-loading optimization.
+    - [ ] `/gallery`: paginate S3 listing and presign only the current page.
+    - [ ] `/blogs?tags=`: push filter to DB with `hasEvery` instead of loading all rows.
+    - [ ] `/projects`: cache thumbnail URLs or serve via CDN so `next/image` can optimize.
+    - [ ] Move to Prisma Accelerate or a pooled connection string.
