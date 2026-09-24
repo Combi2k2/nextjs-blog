@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns';
 import { FiExternalLink } from 'react-icons/fi';
 
@@ -28,10 +29,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             {/* Thumbnail */}
             <div className="relative w-full aspect-video bg-gray-100 dark:bg-gray-700 overflow-hidden">
                 {project.thumbnailUrl ? (
-                <img
+                // unoptimized: presigned S3 URLs rotate hourly, so the Next image cache would never hit
+                <Image
                     src={project.thumbnailUrl}
                     alt={project.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    fill
+                    unoptimized
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 ) : (
                 <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">

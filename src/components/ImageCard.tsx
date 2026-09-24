@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { S3Image } from '@/lib/aws-s3';
 import { FiImage } from 'react-icons/fi';
 
@@ -32,10 +33,13 @@ export default function ImageCard({ image, onClick }: ImageCardProps) {
             <FiImage size={32} className="text-gray-400" />
           </div>
         ) : (
-          <img
+          // unoptimized: presigned S3 URLs rotate hourly, so the Next image cache would never hit
+          <Image
             src={imageUrl}
             alt={image.name}
-            className="w-full h-full object-cover transition-transform group-hover:scale-105"
+            fill
+            unoptimized
+            className="object-cover transition-transform group-hover:scale-105"
             style={{
               objectPosition: 'center',
             }}

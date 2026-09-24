@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import Image from 'next/image';
 import { FiUpload, FiX } from 'react-icons/fi';
 
 interface ProjectFormProps {
@@ -126,7 +127,8 @@ export default function ProjectForm({
 
                     {thumbnailPreview ? (
                         <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 mb-3">
-                            <img src={thumbnailPreview} alt="Thumbnail preview" className="w-full h-full object-cover" />
+                            {/* unoptimized: preview is a local blob: URL or a presigned S3 URL, neither works with the optimizer */}
+                            <Image src={thumbnailPreview} alt="Thumbnail preview" fill unoptimized className="object-cover" />
                             <button
                                 type="button"
                                 onClick={clearThumbnail}

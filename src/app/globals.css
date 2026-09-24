@@ -1,3 +1,113 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* --- react-vertical-timeline-component overrides --------------------------- */
+/* The library only enables the alternating two-column layout at viewport
+   >= 1170px. Below that, everything collapses to a single left column, which
+   looks nothing like the demo. These rules mirror the library's own
+   >=1170px block at a lower breakpoint (900px) so alternating kicks in
+   earlier — everything else is dark-mode / colour / spacing tweaks.
+
+   `!important` is used on the sizing / positioning rules below because the
+   library's own >=1170px block would otherwise override us at wide viewports
+   (same specificity, library CSS is imported by the component so it can load
+   after globals.css). */
+
+:root {
+    /* card slightly darker than white so it separates from the light body */
+    --timeline-card-bg: #f5f5f4;   /* stone-100 */
+    --timeline-card-fg: #111827;
+    --timeline-date-fg: #4b5563;
+    --timeline-line: #d1d5db;
+}
+
+.dark {
+    /* card slightly lighter than the stone-900 body so cards pop */
+    --timeline-card-bg: #292524;   /* stone-800 */
+    --timeline-card-fg: #e7e5e4;
+    --timeline-date-fg: #a8a29e;
+    --timeline-line: #44403c;
+}
+
+.vertical-timeline::before {
+    background: var(--timeline-line) !important;
+}
+
+.vertical-timeline-element-content {
+    background: var(--timeline-card-bg) !important;
+    color: var(--timeline-card-fg) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18) !important;
+}
+
+.vertical-timeline-element-content-arrow {
+    border-right-color: var(--timeline-card-bg) !important;
+}
+
+.vertical-timeline-element-date {
+    color: var(--timeline-date-fg) !important;
+    opacity: 1 !important;
+}
+
+/* Enable the alternating two-column layout starting at 1024px instead of
+   1170px, aligned with Tailwind's `lg:` breakpoint so the whole section
+   switches together (About sticky column + alternating timeline). Below
+   1024px everything stacks into the phone-style vertical layout. */
+@media only screen and (min-width: 1024px) {
+    .vertical-timeline.vertical-timeline--two-columns {
+        width: 100% !important;
+    }
+    .vertical-timeline.vertical-timeline--two-columns::before {
+        left: 50% !important;
+        margin-left: -2px !important;
+    }
+    .vertical-timeline-element {
+        margin: 4em 0;
+    }
+    .vertical-timeline-element:first-child {
+        margin-top: 0;
+    }
+    .vertical-timeline-element:last-child {
+        margin-bottom: 0;
+    }
+    .vertical-timeline--two-columns .vertical-timeline-element-icon {
+        width: 60px !important;
+        height: 60px !important;
+        left: 50% !important;
+        margin-left: -30px !important;
+    }
+    .vertical-timeline--two-columns .vertical-timeline-element-content {
+        margin-left: 0 !important;
+        padding: 1.5em !important;
+        width: 42% !important;
+    }
+    .vertical-timeline--two-columns .vertical-timeline-element-content-arrow {
+        top: 24px !important;
+        left: 100% !important;
+        transform: rotate(180deg) !important;
+    }
+    .vertical-timeline--two-columns .vertical-timeline-element-content .vertical-timeline-element-date {
+        position: absolute !important;
+        width: 100% !important;
+        left: 138% !important;
+        top: 6px !important;
+        font-size: 1rem !important;
+    }
+    .vertical-timeline--two-columns .vertical-timeline-element.vertical-timeline-element--right .vertical-timeline-element-content,
+    .vertical-timeline--two-columns .vertical-timeline-element:nth-child(2n):not(.vertical-timeline-element--left) .vertical-timeline-element-content {
+        float: right !important;
+    }
+    .vertical-timeline--two-columns .vertical-timeline-element.vertical-timeline-element--right .vertical-timeline-element-content-arrow,
+    .vertical-timeline--two-columns .vertical-timeline-element:nth-child(2n):not(.vertical-timeline-element--left) .vertical-timeline-element-content-arrow {
+        top: 24px !important;
+        left: auto !important;
+        right: 100% !important;
+        transform: rotate(0) !important;
+    }
+    .vertical-timeline--two-columns .vertical-timeline-element.vertical-timeline-element--right .vertical-timeline-element-content .vertical-timeline-element-date,
+    .vertical-timeline--two-columns .vertical-timeline-element:nth-child(2n):not(.vertical-timeline-element--left) .vertical-timeline-element-content .vertical-timeline-element-date {
+        left: auto !important;
+        right: 138% !important;
+        text-align: right !important;
+    }
+}

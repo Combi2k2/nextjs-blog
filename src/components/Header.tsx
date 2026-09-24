@@ -14,9 +14,9 @@ interface NavItem {
 
 const NAV_ITEMS: Array<NavItem> = [
     {label: "Home", page: "/"},
-    {label: "About", page: "about"},
     {label: "Blogs", page: "blogs"},
     {label: "Gallery", page: "gallery"},
+    {label: "Projects", page: "projects"},
 ]
 
 export default function Header() {

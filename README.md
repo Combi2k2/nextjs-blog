@@ -47,5 +47,8 @@ Thanks for visiting my blog! Feel free to connect or reach out if you'd like to 
 - [X] Blog preview feature.
 - [ ] Blog inline preview feature.
 - [ ] Blog draft saving method.
-- [ ] Blog comment feature.
+- [X] Blog comment feature.
 - [X] Blogs fetch everytime going to blogs endpoint (currently failing when going to blogs after editing prisma studio)
+- [X] Image gallery with self-hosted S3 storage.
+- [X] Projects page and studio CRUD.
+- [ ] Query / asset-loading optimization: paginate S3 listing + presign on `/gallery` (currently presigns all objects per visit), push tag filter to DB with `hasEvery` on `/blogs`, cache or long-expiry project thumbnails on `/projects`, and consider Prisma Accelerate or a pooled connection string.
