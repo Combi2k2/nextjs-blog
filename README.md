@@ -51,8 +51,12 @@ Thanks for visiting my blog! Feel free to connect or reach out if you'd like to 
 - [X] Blogs fetch everytime going to blogs endpoint (currently failing when going to blogs after editing prisma studio)
 - [X] Image gallery with self-hosted S3 storage.
 - [X] Projects page and studio CRUD.
-- [ ] Query / asset-loading optimization.
-    - [ ] `/gallery`: paginate S3 listing and presign only the current page.
-    - [ ] `/blogs?tags=`: push filter to DB with `hasEvery` instead of loading all rows.
+- [ ] Query optimization.
+    - [X] `/blogs?tags=`: push filter to DB with `hasEvery` instead of loading all rows.
+    - [X] Cache tag counts with `unstable_cache` + `revalidateTag('blogs')` so `/blogs` skips the tag rollup query on cache hits.
+    - [X] Batch `findMany + count` into one `$transaction` on `/blogs`.
+    - [X] Parallelize blog + comments fetch on `/blogs/[id]`.
+    - [X] Drop the pre-check in `createComment`; rely on the FK and catch `P2003`.
+    - [X] Add indexes on `Blog.updatedAt`, `Project.createdAt`, `Comment(blogId, timestamp)` — requires `prisma migrate dev` to apply.
     - [ ] `/projects`: cache thumbnail URLs or serve via CDN so `next/image` can optimize.
     - [ ] Move to Prisma Accelerate or a pooled connection string.

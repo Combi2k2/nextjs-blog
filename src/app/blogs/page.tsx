@@ -4,47 +4,19 @@ import { prisma } from '@/lib/prisma';
 import Pagination from '@/components/Pagination';
 import BlogCard from '@/components/BlogCard';
 import TagFilter from '@/components/TagFilter';
-import { getTagCounts, getTotalBlogCount } from '@/utils/tag-cache';
+import { getTagCounts } from '@/utils/tag-cache';
 
 const BLOGS_PER_PAGE = 5;
 
 async function getBlogs(page: number = 1, selectedTags: string[] = []) {
     const skip = (page - 1) * BLOGS_PER_PAGE;
-    
-    if (selectedTags.length === 0) {
-        // No filtering - use optimized query for current page only
-        const [blogs, totalCount] = await Promise.all([
-            prisma.blog.findMany({
-                select: {
-                    id: true,
-                    title: true,
-                    excerpt: true,
-                    updatedAt: true,
-                    tags: true,
-                },
-                orderBy: { updatedAt: 'desc' },
-                skip,
-                take: BLOGS_PER_PAGE,
-            }),
-            getTotalBlogCount()
-        ]);
+    const where = selectedTags.length > 0
+        ? { tags: { hasEvery: selectedTags } }
+        : {};
 
-        const totalPages = Math.ceil(totalCount / BLOGS_PER_PAGE);
-
-        return {
-            blogs: blogs.map((blog) => ({
-                ...blog,
-                date: blog.updatedAt.toISOString(),
-            })),
-            totalPages,
-            currentPage: page,
-            totalCount,
-            filteredCount: totalCount,
-        };
-    } else {
-        // Filtering required - need to get all blogs to filter
-        // TODO: This could be optimized with database-level filtering in the future
-        const allBlogs = await prisma.blog.findMany({
+    const [blogs, filteredCount] = await prisma.$transaction([
+        prisma.blog.findMany({
+            where,
             select: {
                 id: true,
                 title: true,
@@ -53,31 +25,20 @@ async function getBlogs(page: number = 1, selectedTags: string[] = []) {
                 tags: true,
             },
             orderBy: { updatedAt: 'desc' },
-        });
+            skip,
+            take: BLOGS_PER_PAGE,
+        }),
+        prisma.blog.count({ where }),
+    ]);
 
-        // Filter blogs by selected tags (AND operation)
-        const filteredBlogs = allBlogs.filter(blog => 
-            selectedTags.every(selectedTag => 
-                blog.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase())
-            )
-        );
-
-        // Apply pagination to filtered results
-        const filteredCount = filteredBlogs.length;
-        const totalPages = Math.ceil(filteredCount / BLOGS_PER_PAGE);
-        const paginatedBlogs = filteredBlogs.slice(skip, skip + BLOGS_PER_PAGE);
-
-        return {
-            blogs: paginatedBlogs.map((blog) => ({
-                ...blog,
-                date: blog.updatedAt.toISOString(),
-            })),
-            totalPages,
-            currentPage: page,
-            totalCount: allBlogs.length,
-            filteredCount,
-        };
-    }
+    return {
+        blogs: blogs.map((blog) => ({
+            ...blog,
+            date: blog.updatedAt.toISOString(),
+        })),
+        totalPages: Math.ceil(filteredCount / BLOGS_PER_PAGE),
+        currentPage: page,
+    };
 }
 
 interface BlogPageProps {

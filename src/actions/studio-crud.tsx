@@ -2,9 +2,8 @@
 
 import { prisma } from "@/lib/prisma"
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { listFiles, uploadFile, deleteFile, getFileUrl } from "@/lib/aws-s3";
-import { addTagsToCache, updateTagsInCache, removeTagsFromCache } from "@/utils/tag-cache";
 
 export async function createBlog(formData: FormData) {
     const title = formData.get("title") as string;
@@ -22,9 +21,7 @@ export async function createBlog(formData: FormData) {
         }
     });
 
-    // Add new tags to cache
-    addTagsToCache(tags);
-    
+    revalidateTag("blogs");
     revalidatePath("/blogs");
     revalidatePath(`/blogs/${blog.id}`);
     revalidatePath("/studio/blogs");
@@ -38,12 +35,6 @@ export async function updateBlog(id: string, formData: FormData) {
         .map((tag: string) => tag.trim())
         .filter((tag: string) => tag !== '');
 
-    // Get old tags before updating
-    const oldBlog = await prisma.blog.findUnique({
-        where: { id },
-        select: { tags: true }
-    });
-
     const blog = await prisma.blog.update({
         where: {
             id: id,
@@ -56,11 +47,7 @@ export async function updateBlog(id: string, formData: FormData) {
         }
     });
 
-    // Update tags in cache
-    if (oldBlog) {
-        updateTagsInCache(oldBlog.tags, newTags);
-    }
-    
+    revalidateTag("blogs");
     revalidatePath("/blogs");
     revalidatePath(`/blogs/${blog.id}`);
     revalidatePath("/studio/blogs");
@@ -68,23 +55,13 @@ export async function updateBlog(id: string, formData: FormData) {
 }
 
 export async function deleteBlog(id: string) {
-    // Get tags before deleting
-    const blog = await prisma.blog.findUnique({
-        where: { id },
-        select: { tags: true }
-    });
-
     await prisma.blog.delete({
         where: {
             id: id,
         },
     });
 
-    // Remove tags from cache
-    if (blog) {
-        removeTagsFromCache(blog.tags);
-    }
-    
+    revalidateTag("blogs");
     revalidatePath("/blogs");
     revalidatePath("/studio/blogs");
     redirect("/studio/blogs");

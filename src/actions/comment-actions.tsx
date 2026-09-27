@@ -1,5 +1,6 @@
 'use server'
 
+import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
@@ -32,16 +33,6 @@ export async function createComment(data: CreateCommentData) {
             return { success: false, error: 'Comment must be between 1 and 1000 characters' }
         }
 
-        // Check if blog exists
-        const blogExists = await prisma.blog.findUnique({
-            where: { id: data.blogId }
-        })
-
-        if (!blogExists) {
-            return { success: false, error: 'Blog not found' }
-        }
-
-        // Create comment
         const comment = await prisma.comment.create({
             data: {
                 blogId: data.blogId,
@@ -50,11 +41,13 @@ export async function createComment(data: CreateCommentData) {
             }
         })
 
-        // Revalidate the blog page to show new comment
         revalidatePath(`/blogs/${data.blogId}`)
 
         return { success: true, comment }
     } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
+            return { success: false, error: 'Blog not found' }
+        }
         console.error('Error creating comment:', error)
         return { success: false, error: 'Failed to create comment' }
     }
