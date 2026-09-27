@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
-import { getFileUrl } from '@/lib/aws-s3';
+import { getPublicUrl } from '@/lib/aws-s3';
 import { FiPlus } from 'react-icons/fi';
 import { deleteProject } from '@/actions/studio-crud';
 import StudioProjectCard from '@/components/StudioProjectCard';
@@ -10,19 +10,10 @@ async function getProjects() {
         orderBy: { createdAt: 'desc' },
     });
 
-    return Promise.all(
-        projects.map(async (project) => {
-            let thumbnailUrl: string | null = null;
-            if (project.thumbnailKey) {
-                try {
-                    thumbnailUrl = await getFileUrl(project.thumbnailKey);
-                } catch {
-                    // ignore
-                }
-            }
-            return { ...project, thumbnailUrl };
-        })
-    );
+    return projects.map((project) => ({
+        ...project,
+        thumbnailUrl: project.thumbnailKey ? getPublicUrl(project.thumbnailKey) : null,
+    }));
 }
 
 export default async function StudioProjectsPage() {

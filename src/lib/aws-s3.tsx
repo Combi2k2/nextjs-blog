@@ -68,7 +68,16 @@ export async function listFiles(prefix: string = '', maxKeys: number = 100, file
   }
 }
 
-// Get a presigned URL for any file (valid for 1 hour)
+// Get the stable public URL for an object. Assumes the bucket (or the object's
+// prefix) grants public read. Use this for objects that don't need auth so the
+// browser and Next Image can cache/optimize them.
+export function getPublicUrl(key: string): string {
+  const region = process.env.AWS_REGION || 'us-east-1';
+  return `https://${BUCKET_NAME}.s3.${region}.amazonaws.com/${key}`;
+}
+
+// Get a presigned URL for any file (valid for 1 hour). Use this only when the
+// object is private and you need short-lived, authorized access.
 export async function getFileUrl(key: string): Promise<string> {
   try {
     const command = new GetObjectCommand({

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { getFileUrl } from '@/lib/aws-s3';
+import { getPublicUrl } from '@/lib/aws-s3';
 import ProjectCard from '@/components/ProjectCard';
 
 async function getProjects() {
@@ -7,19 +7,10 @@ async function getProjects() {
     orderBy: { createdAt: 'desc' },
   });
 
-  return Promise.all(
-    projects.map(async (project) => {
-      let thumbnailUrl: string | null = null;
-      if (project.thumbnailKey) {
-        try {
-          thumbnailUrl = await getFileUrl(project.thumbnailKey);
-        } catch {
-          // ignore if URL generation fails
-        }
-      }
-      return { ...project, thumbnailUrl };
-    })
-  );
+  return projects.map((project) => ({
+    ...project,
+    thumbnailUrl: project.thumbnailKey ? getPublicUrl(project.thumbnailKey) : null,
+  }));
 }
 
 export default async function ProjectsPage() {

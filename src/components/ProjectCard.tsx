@@ -29,12 +29,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             {/* Thumbnail */}
             <div className="relative w-full aspect-video bg-gray-100 dark:bg-gray-700 overflow-hidden">
                 {project.thumbnailUrl ? (
-                // unoptimized: presigned S3 URLs rotate hourly, so the Next image cache would never hit
                 <Image
                     src={project.thumbnailUrl}
                     alt={project.name}
                     fill
-                    unoptimized
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 ) : (

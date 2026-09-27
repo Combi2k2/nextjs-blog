@@ -58,5 +58,5 @@ Thanks for visiting my blog! Feel free to connect or reach out if you'd like to 
     - [X] Parallelize blog + comments fetch on `/blogs/[id]`.
     - [X] Drop the pre-check in `createComment`; rely on the FK and catch `P2003`.
     - [X] Add indexes on `Blog.updatedAt`, `Project.createdAt`, `Comment(blogId, timestamp)` — requires `prisma migrate dev` to apply.
-    - [ ] `/projects`: cache thumbnail URLs or serve via CDN so `next/image` can optimize.
+    - [X] `/projects`: swap presigned URLs for stable public S3 URLs and drop `unoptimized` so `next/image` can resize, encode webp, and long-cache.
     - [ ] Move to Prisma Accelerate or a pooled connection string.

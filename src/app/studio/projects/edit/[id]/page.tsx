@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { getFileUrl } from '@/lib/aws-s3';
+import { getPublicUrl } from '@/lib/aws-s3';
 import StudioProjectEditForm from '@/components/StudioProjectEditForm';
 
 interface EditProjectPageProps {
@@ -14,16 +14,10 @@ async function getProject(id: string) {
 
     if (!project) notFound();
 
-    let thumbnailUrl: string | null = null;
-    if (project.thumbnailKey) {
-        try {
-            thumbnailUrl = await getFileUrl(project.thumbnailKey);
-        } catch {
-            // ignore
-        }
-    }
-
-    return { ...project, thumbnailUrl };
+    return {
+        ...project,
+        thumbnailUrl: project.thumbnailKey ? getPublicUrl(project.thumbnailKey) : null,
+    };
 }
 
 export default async function EditProjectPage({ params }: EditProjectPageProps) {
