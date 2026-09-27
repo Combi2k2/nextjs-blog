@@ -11,6 +11,8 @@ interface StudioBlogEditFormProps {
     content: string;
     excerpt: string;
     tags: string[];
+    published: boolean;
+    updatedAt: string;
   };
 }
 

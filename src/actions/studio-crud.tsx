@@ -5,21 +5,31 @@ import { redirect } from "next/navigation";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { listFiles, uploadFile, deleteFile, getFileUrl } from "@/lib/aws-s3";
 
-export async function createBlog(formData: FormData) {
-    const title = formData.get("title") as string;
-    const tags = (formData.get("tags") as string)
-        .split(',')
-        .map((tag: string) => tag.trim())
-        .filter((tag: string) => tag !== '');
+function parseBlogFormData(formData: FormData) {
+    return {
+        title: formData.get("title") as string,
+        content: formData.get("content") as string,
+        excerpt: formData.get("summary") as string,
+        tags: (formData.get("tags") as string)
+            .split(',')
+            .map((tag: string) => tag.trim())
+            .filter((tag: string) => tag !== ''),
+    };
+}
 
-    const blog = await prisma.blog.create({
-        data: {
-            title: title,
-            content: formData.get("content") as string,
-            excerpt: formData.get("summary") as string,
-            tags: tags
-        }
-    });
+export async function createBlog(formData: FormData) {
+    const data = parseBlogFormData(formData);
+    const existingId = formData.get("id") as string | null;
+
+    // If a draft was auto-saved earlier, publish that row instead of creating a new one.
+    const blog = existingId
+        ? await prisma.blog.update({
+            where: { id: existingId },
+            data: { ...data, published: true },
+        })
+        : await prisma.blog.create({
+            data: { ...data, published: true },
+        });
 
     revalidateTag("blogs");
     revalidatePath("/blogs");
@@ -29,22 +39,11 @@ export async function createBlog(formData: FormData) {
 }
 
 export async function updateBlog(id: string, formData: FormData) {
-    const title = formData.get("title") as string;
-    const newTags = (formData.get("tags") as string)
-        .split(',')
-        .map((tag: string) => tag.trim())
-        .filter((tag: string) => tag !== '');
+    const data = parseBlogFormData(formData);
 
     const blog = await prisma.blog.update({
-        where: {
-            id: id,
-        },
-        data: {
-            title: title,
-            content: formData.get("content") as string,
-            excerpt: formData.get("summary") as string,
-            tags: newTags
-        }
+        where: { id },
+        data: { ...data, published: true },
     });
 
     revalidateTag("blogs");
@@ -65,6 +64,40 @@ export async function deleteBlog(id: string) {
     revalidatePath("/blogs");
     revalidatePath("/studio/blogs");
     redirect("/studio/blogs");
+}
+
+// Auto-save endpoint. Creates a new draft (published=false) or updates an existing
+// row (preserving its current published state). Does not redirect; returns the id
+// and updatedAt so the client can reconcile localStorage.
+export async function saveBlogDraft(
+    id: string | null,
+    data: { title: string; content: string; excerpt: string; tags: string[] }
+): Promise<{ id: string; updatedAt: string }> {
+    const blog = id
+        ? await prisma.blog.update({
+            where: { id },
+            data,
+            select: { id: true, updatedAt: true },
+        })
+        : await prisma.blog.create({
+            data: { ...data, published: false },
+            select: { id: true, updatedAt: true },
+        });
+
+    revalidateTag("blogs");
+    revalidatePath("/studio/blogs");
+    return { id: blog.id, updatedAt: blog.updatedAt.toISOString() };
+}
+
+export async function publishBlog(id: string) {
+    await prisma.blog.update({
+        where: { id },
+        data: { published: true },
+    });
+    revalidateTag("blogs");
+    revalidatePath("/blogs");
+    revalidatePath(`/blogs/${id}`);
+    revalidatePath("/studio/blogs");
 }
 
 // Project Management Actions

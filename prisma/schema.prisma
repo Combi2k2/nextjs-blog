@@ -19,6 +19,7 @@ model Blog {
   content   String    @db.Text
   excerpt   String    @db.Text
   tags      String[]
+  published Boolean   @default(true)
   updatedAt DateTime  @updatedAt
   createdAt DateTime  @default(now())
   comments  Comment[]

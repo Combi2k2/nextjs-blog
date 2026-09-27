@@ -46,7 +46,7 @@ Thanks for visiting my blog! Feel free to connect or reach out if you'd like to 
 - [X] Put more consideration for the page front-end.
 - [X] Blog preview feature.
 - [X] Blog inline preview feature.
-- [ ] Blog draft saving method.
+- [X] Blog draft saving method.
 - [X] Blog comment feature.
 - [X] Blogs fetch everytime going to blogs endpoint (currently failing when going to blogs after editing prisma studio)
 - [X] Image gallery with self-hosted S3 storage.

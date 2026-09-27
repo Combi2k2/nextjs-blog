@@ -10,9 +10,10 @@ const BLOGS_PER_PAGE = 5;
 
 async function getBlogs(page: number = 1, selectedTags: string[] = []) {
     const skip = (page - 1) * BLOGS_PER_PAGE;
-    const where = selectedTags.length > 0
-        ? { tags: { hasEvery: selectedTags } }
-        : {};
+    const where = {
+        published: true,
+        ...(selectedTags.length > 0 ? { tags: { hasEvery: selectedTags } } : {}),
+    };
 
     const [blogs, filteredCount] = await prisma.$transaction([
         prisma.blog.findMany({

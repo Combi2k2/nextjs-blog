@@ -17,10 +17,17 @@ async function getBlog(id: string) {
             content: true,
             excerpt: true,
             tags: true,
+            published: true,
+            updatedAt: true,
         },
     });
 
-    return blog || notFound();
+    if (!blog) notFound();
+
+    return {
+        ...blog,
+        updatedAt: blog.updatedAt.toISOString(),
+    };
 }
 
 export default async function EditBlogPage({ params }: EditBlogPageProps) {

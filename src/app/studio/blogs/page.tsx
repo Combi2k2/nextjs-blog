@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import { prisma } from '@/lib/prisma';
 import { FiPlus } from 'react-icons/fi';
-import { deleteBlog } from '@/actions/studio-crud';
+import { deleteBlog, publishBlog } from '@/actions/studio-crud';
 import BlogActionButtons from '@/components/BlogActionButtons';
 
 async function getBlogs() {
@@ -14,6 +14,7 @@ async function getBlogs() {
             excerpt: true,
             updatedAt: true,
             tags: true,
+            published: true,
         },
         orderBy: {updatedAt: 'desc'}
     });
@@ -61,8 +62,15 @@ export default async function StudioBlogsPage() {
                         {blogs.map((blog) => (
                             <tr key={blog.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm font-medium text-gray-900 dark:text-white">
-                                        {blog.title}
+                                    <div className="flex items-center gap-2">
+                                        <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                            {blog.title}
+                                        </div>
+                                        {!blog.published && (
+                                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
+                                                Draft
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-md">
                                         {blog.excerpt}
@@ -81,9 +89,11 @@ export default async function StudioBlogsPage() {
                                     {format(new Date(blog.date), 'MMM d, yyyy')}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <BlogActionButtons 
-                                        id={blog.id} 
+                                    <BlogActionButtons
+                                        id={blog.id}
                                         onDelete={deleteBlog}
+                                        onPublish={publishBlog}
+                                        isDraft={!blog.published}
                                         deleteConfirmMessage="Are you sure you want to delete this blog post? This action cannot be undone."
                                     />
                                 </td>

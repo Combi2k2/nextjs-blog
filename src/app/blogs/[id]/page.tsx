@@ -12,13 +12,14 @@ export default async function Page(props: {params: Promise<{ id: string }>}) {
                 title: true,
                 content: true,
                 tags: true,
-                updatedAt: true
+                updatedAt: true,
+                published: true,
             },
             where: {id: params.id}
         }),
         getCommentsByBlogId(params.id),
     ]);
-    if (!blog) return notFound();
+    if (!blog || !blog.published) return notFound();
 
     return (
         <div className="flex min-h-screen mt-20">
