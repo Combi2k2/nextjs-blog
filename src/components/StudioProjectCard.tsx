@@ -16,18 +16,8 @@ export default function StudioProjectCard({ project, onDelete }: StudioProjectCa
         }
     };
 
-    const handleCardClick = () => {
-        if (project.link) {
-            window.open(project.link, '_blank', 'noopener,noreferrer');
-        }
-    };
-
     return (
-        <div
-            className="relative group"
-            onClick={handleCardClick}
-            style={{ cursor: project.link ? 'pointer' : 'default' }}
-        >
+        <div className="relative group">
             <ProjectCard project={project} />
 
             {/* Hover action overlay */}

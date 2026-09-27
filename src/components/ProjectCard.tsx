@@ -24,8 +24,20 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         ? project.desc.slice(0, MAX_DESC_LENGTH).trim() + '...'
         : project.desc;
 
+    const handleClick = () => {
+        if (project.link) {
+            window.open(project.link, '_blank', 'noopener,noreferrer');
+        }
+    };
+
     return (
-        <div className="group flex flex-col rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow duration-200">
+        <div
+            onClick={handleClick}
+            className={
+                'group flex flex-col rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow duration-200'
+                + (project.link ? ' cursor-pointer' : '')
+            }
+        >
             {/* Thumbnail */}
             <div className="relative w-full aspect-video bg-gray-100 dark:bg-gray-700 overflow-hidden">
                 {project.thumbnailUrl ? (
@@ -44,30 +56,23 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             </div>
 
             {/* Body */}
-            <div className="flex flex-col flex-1 p-4 gap-2">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-snug">
-                    {project.name}
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed flex-1">
-                    {truncated}
-                </p>
-            </div>
-
-            {/* Footer */}
-            <div className="px-4 pb-4 pt-1 flex items-center justify-between text-xs text-gray-400 dark:text-gray-500 border-t border-gray-100 dark:border-gray-700 mt-auto">
-                <span>{formatDistanceToNow(new Date(project.createdAt), { addSuffix: true })}</span>
-                    {project.link && (
-                <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <FiExternalLink size={13} />
-                    <span>Visit</span>
-                </a>
-                )}
+            <div className="flex flex-col flex-1 p-4">
+                <div className="flex items-baseline justify-between gap-3">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-snug">
+                        {project.name}
+                    </h3>
+                    <span className="shrink-0 text-xs text-gray-400 dark:text-gray-500">
+                        {formatDistanceToNow(new Date(project.createdAt), { addSuffix: true })}
+                    </span>
+                </div>
+                {/* description: always visible on touch; hidden until hover on md+ */}
+                <div className="mt-2 grid overflow-hidden transition-[grid-template-rows,margin] duration-300 grid-rows-[1fr] md:grid-rows-[0fr] md:mt-0 md:group-hover:grid-rows-[1fr] md:group-hover:mt-2">
+                    <div className="min-h-0">
+                        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                            {truncated}
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     );

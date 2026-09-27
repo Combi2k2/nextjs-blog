@@ -19,29 +19,39 @@ const skills = [
 export default function Home() {
     return (
         <>
-            <section id="home">
-                <div className="flex flex-col text-center items-center justify-center animate-fadeIn animation-delay-2 py-20 md:py-30 md:flex-row md:space-x-4 md:text-left">
-                    <div className="md:mt-2 md:w-1/2">
+            <section id="home" className="min-h-screen flex items-center justify-center pt-16 md:pt-20">
+                <div className="flex flex-col text-center items-center animate-fadeIn animation-delay-2 md:flex-row md:gap-12 lg:gap-16 md:text-left">
+                    <div className="md:shrink-0">
                         <Image
                             src="/asset/avatar1.jpg"
                             alt=""
-                            style={{ width: "80%", height: "auto" }}
                             width={325}
                             height={325}
-                            className="rounded-full shadow-2xl mx-auto"
+                            priority
+                            className="rounded-full shadow-2xl mx-auto w-56 md:w-80 lg:w-96 h-auto"
                         />
                     </div>
-                    <div className="md:mt-2 md:w-3/5">
-                        <h1 className="text-4xl font-bold mt-6 md:mt-0 md:text-7xl">Hi, I&#39;m Duc!</h1>
-                        <p className="text-lg mt-4 mb-6 md:text-2xl">
+                    <div className="md:max-w-3xl">
+                        <h1 className="text-5xl font-bold mt-6 md:mt-0 md:text-7xl lg:text-7xl">Hi, I&#39;m Duc!</h1>
+                        <p className="text-lg mt-4 mb-5 md:text-xl lg:text-2xl">
                             I&#39;m an{" "}
                             <span className="font-semibold text-teal-600">
                                 Indie Software Engineer
                             </span>
-                            . I love to tinkering and designing algorithms.
-                            Working towards creating products that
-                            make life easier and more meaningful.
+                            . I love to tinker and design algorithms.
+                            Working towards products that make
+                            life easier and more meaningful.
                         </p>
+                        <ul className="mb-6 space-y-1 text-sm md:text-base text-gray-600 dark:text-gray-400">
+                            <li>
+                                <span className="font-mono text-gray-500 dark:text-gray-500">2021–2024</span>
+                                {" · "}BSc in Math &amp; Computer Science, École Polytechnique
+                            </li>
+                            <li>
+                                <span className="font-mono text-gray-500 dark:text-gray-500">2025–2027</span>
+                                {" · "}MSc in Computer Graphics, Télécom Paris
+                            </li>
+                        </ul>
                         <Link
                             href="blogs"
                             className="text-neutral-100 font-semibold px-6 py-3 bg-teal-600 rounded shadow hover:bg-teal-700"
