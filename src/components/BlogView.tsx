@@ -53,7 +53,7 @@ export default function BlogView({ title, content, tags, date }: BlogViewProps) 
     };
 
     return (
-        <div className="w-full my-8 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+        <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-md">
             <div className="px-6 py-6 md:px-8 md:py-8">
                 <h1 className="text-3xl font-bold mb-4">{title}</h1>
                 {date && (

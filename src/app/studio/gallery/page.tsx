@@ -60,7 +60,7 @@ function StudioGalleryContent() {
 
     return (
         <div className="container mx-auto px-4 py-8 pt-24">
-            <h1 className="text-3xl font-bold mb-8">Gallery Management</h1>
+            <h1 className="text-3xl font-bold text-center mb-8">Gallery Management</h1>
 
             {/* Upload Section */}
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md mb-6">

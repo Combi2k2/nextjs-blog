@@ -22,8 +22,8 @@ export default async function Page(props: {params: Promise<{ id: string }>}) {
 
     return (
         <div className="flex min-h-screen mt-20">
-            <div className="w-full max-w-4xl mx-auto">
-                <BlogView 
+            <div className="w-full max-w-4xl mx-auto my-8">
+                <BlogView
                     title={blog.title} 
                     content={blog.content} 
                     date={blog.updatedAt} 

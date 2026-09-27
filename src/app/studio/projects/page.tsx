@@ -21,8 +21,8 @@ export default async function StudioProjectsPage() {
 
     return (
         <div className="container mx-auto px-4 py-8 pt-24">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold">Project Management</h1>
+            <h1 className="text-3xl font-bold text-center mb-4">Project Management</h1>
+            <div className="flex justify-end mb-8">
                 <Link
                     href="/studio/projects/create"
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200"
